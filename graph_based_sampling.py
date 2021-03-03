@@ -147,7 +147,6 @@ def Gibbs(X_0, S):
 
 def MH_Gibbs(graph, numsamples):
     model = graph[1]
-    exp = graph[2]
     vertices = model['V']
     arcs = model['A']
     links = model['P'] # link functions aka P
@@ -181,20 +180,14 @@ def MH_Gibbs(graph, numsamples):
 
 
         # evaluate 
-        print("p is:", p)
         d = deterministic_eval(p) # d = EVAL(p)
-        print("d is", d)
         dnew = deterministic_eval(pnew) #d' = EVAL(p')
 
-        print("cX is", cX)
-        print("cX[x] is", cX[x])
+
         ### compute acceptance ratio ###
 
         # initialize log alpha
-        print(dnew)
-        print(cXnew[x])
-        print(d)
-        print(cX[x])
+
         logAlpha = dnew.log_prob(cXnew[x]) - d.log_prob(cX[x])
 
         ### V_x = {x} \cup {v:x \in PA(v)} ###
@@ -203,7 +196,8 @@ def MH_Gibbs(graph, numsamples):
 
         # compute alpha
         for v in Vx:
-            Pv = links[v] #P[v]
+            print("links", links)
+            Pv = links[v] # getting a bug here
             v_exp = plugin_parent_values(Pv,cX) #same as we did for p and pnew
             v_exp_new = plugin_parent_values(Pv,cXnew)
             dv_new = deterministic_eval(v_exp_new)
@@ -218,19 +212,21 @@ def MH_Gibbs(graph, numsamples):
     def Gibbs_step(cX,Q):
         # here we need a list of the latent (unobserved) variables
         Xobsv = list(filter(lambda v: links[v][0] == "sample*", V_sorted))
+        print("Xobsv", Xobsv)
 
+        print("cX inside gibb-step is", cX)
         for u in Xobsv:
             # here we are doing the step
             # d <- EVAL(Q(u) [X := \cX]) 
             # note it suffices to consider only the non-observed variables
             Qu = Q[u][1]
             u_exp = plugin_parent_values(Qu,cX)
-            dist_u = deterministic_eval(u_exp)
+            dist_u = deterministic_eval(u_exp).sample()
             cXnew = {**cX}
             cX[u] = dist_u
 
             #compute acceptance ratio
-            alpha = accept(u,cX, cXnew,Q)
+            alpha = accept(u,cX,cXnew,Q)
             val = Uniform(0,1).sample()
 
             if val < alpha:
@@ -246,7 +242,8 @@ def MH_Gibbs(graph, numsamples):
         cX = Gibbs_step(cX_0,Q)
         cX_list.append(cX)
     
-    samples = [ deterministic_eval(plugin_parent_values(graph[2],X)) for X in cX_list ]
+    samples = list(map(lambda cX: deterministic_eval(plugin_parent_values(graph[2], cX)), cX_list))
+    #samples = [ deterministic_eval(plugin_parent_values(graph[2],X)) for X in cX_list ]
 
     return samples
 
