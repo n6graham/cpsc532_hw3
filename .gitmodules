@@ -1,0 +1,3 @@
+[submodule "daphne"]
+	path = daphne
+	url = https://github.com/plai-group/daphne.git
