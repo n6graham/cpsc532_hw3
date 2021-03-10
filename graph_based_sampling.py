@@ -3,9 +3,11 @@ import torch
 import torch.distributions as dist
 import matplotlib.pyplot as plt
 import seaborn as sns
+from torch.distributions import Uniform, Normal
 
 from daphne import daphne
 import numpy as np
+import time
 
 from primitives import PRIMITIVES
 from tests import is_tol, run_prob_test,load_truth
@@ -27,7 +29,11 @@ def deterministic_eval(exp):
         return torch.Tensor([float(exp)]).squeeze()
     elif type(exp) is torch.Tensor:
         return exp
+    elif type(exp) is bool:
+        return torch.tensor(exp)
     else:
+        print("expression is:", exp)
+        print(type(exp))
         raise Exception("Expression type unknown.", exp)
 
 def topological_sort(nodes, edges):
@@ -134,15 +140,6 @@ def run_probabilistic_tests():
     print('All probabilistic tests passed')    
 
 
-def print_tensor(tensor):
-    tensor = np.round(tensor.numpy(), decimals=3)
-    print(tensor)
-
-
-def Gibbs(X_0, S):
-    #for i in range(0,S):
-
-    return X_0
 
 
 def MH_Gibbs(graph, numsamples):
@@ -183,11 +180,9 @@ def MH_Gibbs(graph, numsamples):
         d = deterministic_eval(p) # d = EVAL(p)
         dnew = deterministic_eval(pnew) #d' = EVAL(p')
 
-
         ### compute acceptance ratio ###
 
         # initialize log alpha
-
         logAlpha = dnew.log_prob(cXnew[x]) - d.log_prob(cX[x])
 
         ### V_x = {x} \cup {v:x \in PA(v)} ###
@@ -196,12 +191,12 @@ def MH_Gibbs(graph, numsamples):
 
         # compute alpha
         for v in Vx:
-            print("links", links)
             Pv = links[v] # getting a bug here
             v_exp = plugin_parent_values(Pv,cX) #same as we did for p and pnew
             v_exp_new = plugin_parent_values(Pv,cXnew)
-            dv_new = deterministic_eval(v_exp_new)
-            dv = deterministic_eval(v_exp)
+            dv_new = deterministic_eval(v_exp_new[1])
+            dv = deterministic_eval(v_exp[1])
+
             
             ## change below
             logAlpha = logAlpha + dv_new.log_prob(cXnew[v])
@@ -212,9 +207,7 @@ def MH_Gibbs(graph, numsamples):
     def Gibbs_step(cX,Q):
         # here we need a list of the latent (unobserved) variables
         Xobsv = list(filter(lambda v: links[v][0] == "sample*", V_sorted))
-        print("Xobsv", Xobsv)
 
-        print("cX inside gibb-step is", cX)
         for u in Xobsv:
             # here we are doing the step
             # d <- EVAL(Q(u) [X := \cX]) 
@@ -262,18 +255,93 @@ def compute_log_joint(sorted_nodes, links, trace_dict):
 if __name__ == '__main__':
     
 
-    #run_deterministic_tests()
-    #run_probabilistic_tests()
+    print("==== running program 1 =====")
+    graph = daphne(['graph','-i','../HW3/programs/1.daphne'])
+    start = time.time()
+    samples = MH_Gibbs(graph, 20000)
+    end = time.time()
+    print("Program 1 mean: ", np.mean(samples))
+    print("Program 1 variance: ", np.var(samples))
+    print("Total run time: ", end-start)
+    fig,ax = plt.subplots()
+    ax.plot(samples)
+    fig.savefig('../HW3/p1traceplot',dpi = 150)
 
-    for i in range(1,2):
-        graph = daphne(['graph','-i','../HW3/programs/{}.daphne'.format(i)])
-        print(graph)
+    figH,axH = plt.subplots()
+    axH.hist(samples)
+    figH.savefig('../HW3/p1histogram',dpi = 150)
+    #plt.plot(list(range(0,len(samples))), samples)
+    #plt.show()
 
-        samples = MH_Gibbs(graph, 1000)
-        print(samples)
 
+
+    print(" \n \n ==== running program 2 =====")
+    graph = daphne(['graph','-i','../HW3/programs/2.daphne'])
+    #print(graph)
+    start = time.time()
+    samples = MH_Gibbs(graph, 10000)
+    end = time.time()
+    samples1 = [ s[0] for s in samples]
+    samples2 = [s[1] for s in samples]
+    print("Program 2 slope mean is: ",np.mean(samples1))
+    print("Program 2 bias mean is: ", np.mean(samples2))
+    print("Program 2 slope variance is: ",np.var(samples1))
+    print("Program 2 bias variance is: ", np.var(samples2))
+    print("Total run time: ", end-start)
+    fig1,ax1 = plt.subplots()
+    ax1.plot(samples1)
+    fig1.savefig('../HW3/p2traceplot_slope',dpi = 150)
+
+    fig2,ax2 = plt.subplots()
+    ax2.plot(samples1)
+    fig2.savefig('../HW3/p2traceplot_bias',dpi = 150)
+
+    figH,axH = plt.subplots()
+    axH.hist(samples1)
+    figH.savefig('../HW3/p2histogram_slope',dpi = 150)
+
+    figH,axH = plt.subplots()
+    axH.hist(samples2)
+    figH.savefig('../HW3/p1histogram_bias',dpi = 150)
+
+    print(" \n \n ==== running program 3 ====")
+    graph = daphne(['graph','-i','../HW3/programs/3.daphne'])
+    start = time.time()
+    samples = MH_Gibbs(graph, 9000)
+    end = time.time()
+    print("Program 3 mean is: ", np.mean(samples))
+    print("Program 3 variance is: ", np.var(samples))
+    print("total run time: ", end-start)
+    figH,axH = plt.subplots()
+    axH.hist([float(s) for s in samples])
+    figH.savefig('../HW3/p3histogram',dpi = 150)
+
+
+
+
+    print(" \n \n ==== running program 4 ====")
+    graph = daphne(['graph','-i','../HW3/programs/4.daphne'])
+    start = time.time()
+    samples = MH_Gibbs(graph, 80000)
+    end = time.time()
+    print("Program 4 mean is: ", np.mean(samples))
+    print("Program 4 variance is: ", np.var(samples))
+    print("total run time: ", end-start)
+    figH,axH = plt.subplots()
+    axH.hist([float(s) for s in samples])
+    figH.savefig('../HW3/p4histogram',dpi = 150)
 
     '''
+
+    for i in range(3,5):
+        graph = daphne(['graph','-i','../HW3/programs/{}.daphne'.format(i)])
+        samples = MH_Gibbs(graph, 10000)
+        #print(samples)
+        print("the mean for program ", i, " is: ", np.mean(samples))
+        print("the variance for program ", i, " is: ", np.var(samples))
+
+
+    
     for i in range(1,5):
         graph = daphne(['graph','-i','../HW3/programs/{}.daphne'.format(i)])
         samples, n = [], 1000

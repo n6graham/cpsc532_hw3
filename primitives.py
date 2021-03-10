@@ -80,6 +80,8 @@ def normal(mu, sigma):
     return torch.distributions.Normal(mu, sigma)
 def uniform(a, b):
     return torch.distributions.Uniform(a, b)
+#def Uniform(a, b):
+#    return torch.distributions.Uniform(a, b)
 def exponential(lamb):
     return torch.distributions.Exponential(lamb)
 def discrete(vector):

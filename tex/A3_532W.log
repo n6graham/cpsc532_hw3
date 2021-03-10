@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  2 MAR 2021 22:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  9 MAR 2021 13:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -526,60 +526,129 @@ LaTeX Font Info:    Try loading font information for OT1+pcr on input line 239.
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17.28> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 242.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 243.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 245.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2019/02/27 1.8b listings language file
 )
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 257.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 256.
 
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 257.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 256.
  [1
 
 {/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
-LaTeX Font Info:    Try loading font information for OML+ptm on input line 462.
+ [4] [5]
+LaTeX Font Info:    Try loading font information for OML+ptm on input line 538.
 
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/psnfss/omlptm.fd
 File: omlptm.fd 
 )
 LaTeX Font Info:    Font shape `OML/ptm/m/n' in size <10> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 462.
- [4]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 509.
- [5]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 509.
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 538.
+ [6]
+<MH_Gibbs_results.png, id=348, 322.20375pt x 340.27126pt>
+File: MH_Gibbs_results.png Graphic file (type png)
+<use MH_Gibbs_results.png>
+Package pdftex.def Info: MH_Gibbs_results.png  used on input line 576.
+(pdftex.def)             Requested size: 225.54108pt x 238.18825pt.
+ [7 <./MH_Gibbs_results.png>]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 581.
+<p1traceplot.png, id=356, 462.528pt x 346.896pt>
+File: p1traceplot.png Graphic file (type png)
+<use p1traceplot.png>
+Package pdftex.def Info: p1traceplot.png  used on input line 585.
+(pdftex.def)             Requested size: 185.0079pt x 138.75594pt.
+<p1histogram.png, id=357, 462.528pt x 346.896pt>
+File: p1histogram.png Graphic file (type png)
+<use p1histogram.png>
+Package pdftex.def Info: p1histogram.png  used on input line 586.
+(pdftex.def)             Requested size: 185.0079pt x 138.75594pt.
+<p2traceplot_bias.png, id=358, 462.528pt x 346.896pt>
+File: p2traceplot_bias.png Graphic file (type png)
+<use p2traceplot_bias.png>
+Package pdftex.def Info: p2traceplot_bias.png  used on input line 595.
+(pdftex.def)             Requested size: 185.0079pt x 138.75594pt.
+<p2histogram_bias.png, id=359, 462.528pt x 346.896pt>
+File: p2histogram_bias.png Graphic file (type png)
+<use p2histogram_bias.png>
+Package pdftex.def Info: p2histogram_bias.png  used on input line 596.
+(pdftex.def)             Requested size: 185.0079pt x 138.75594pt.
+<p2traceplot_slope.png, id=360, 462.528pt x 346.896pt>
+File: p2traceplot_slope.png Graphic file (type png)
+<use p2traceplot_slope.png>
+Package pdftex.def Info: p2traceplot_slope.png  used on input line 602.
+(pdftex.def)             Requested size: 185.0079pt x 138.75594pt.
+<p2histogram_slope.png, id=361, 462.528pt x 346.896pt>
+File: p2histogram_slope.png Graphic file (type png)
+<use p2histogram_slope.png>
+Package pdftex.def Info: p2histogram_slope.png  used on input line 603.
+(pdftex.def)             Requested size: 185.0079pt x 138.75594pt.
 
-(./A3_532W.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 509.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 509.
-Package rerunfilecheck Info: File `A3_532W.out' has not changed.
-(rerunfilecheck)             Checksum: 589D31E608F163C430F85D781FD01D5B;104.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 509.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<p3histogram.png, id=362, 462.528pt x 346.896pt>
+File: p3histogram.png Graphic file (type png)
+<use p3histogram.png>
+Package pdftex.def Info: p3histogram.png  used on input line 613.
+(pdftex.def)             Requested size: 185.0079pt x 138.75594pt.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<p4histogram.png, id=363, 462.528pt x 346.896pt>
+File: p4histogram.png Graphic file (type png)
+<use p4histogram.png>
+Package pdftex.def Info: p4histogram.png  used on input line 621.
+(pdftex.def)             Requested size: 185.0079pt x 138.75594pt.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 629.
+[8 <./p1traceplot.png> <./p1histogram.png> <./p2traceplot_bias.png> <./p2histog
+ram_bias.png>] [9 <./p2traceplot_slope.png> <./p2histogram_slope.png> <./p3hist
+ogram.png> <./p4histogram.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 629.
+ (./A3_532W.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 629.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 629.
+
+
+Package rerunfilecheck Warning: File `A3_532W.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `A3_532W.out':
+(rerunfilecheck)             Before: 347559D961ACB8D2CF083A96D7C1B7DA;526
+(rerunfilecheck)             After:  16DDF59D8B6E4A171E37199F8B0A56BD;595.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 629.
  ) 
 Here is how much of TeX's memory you used:
- 11291 strings out of 492616
- 174256 string characters out of 6129482
- 734471 words of memory out of 5000000
- 14842 multiletter control sequences out of 15000+600000
- 23256 words of font info for 68 fonts, out of 8000000 for 9000
+ 11444 strings out of 492616
+ 176653 string characters out of 6129482
+ 690684 words of memory out of 5000000
+ 14907 multiletter control sequences out of 15000+600000
+ 26508 words of font info for 72 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 32i,6n,43p,226b,2204s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 32i,8n,43p,226b,2088s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/te
 xlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/tex
 live/2019/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/201
 9/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2019/texmf-di
 st/fonts/type1/urw/times/utmr8a.pfb>
-Output written on A3_532W.pdf (5 pages, 78398 bytes).
+Output written on A3_532W.pdf (9 pages, 213906 bytes).
 PDF statistics:
- 325 PDF objects out of 1000 (max. 8388607)
- 309 compressed objects within 4 object streams
- 223 named destinations out of 1000 (max. 500000)
- 17 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 470 PDF objects out of 1000 (max. 8388607)
+ 431 compressed objects within 5 object streams
+ 299 named destinations out of 1000 (max. 500000)
+ 118 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -239,41 +239,14 @@
 	All the code can be found on: \url{https://github.com/n6graham/cpsc532_hw3}.
 	
 	
+	
 	\section{Importance sampling}
 	
-	\begin{lstlisting}[language=Python]
-	def compute_expectation(weighted_samples):
-	    '''
-	    using a stream of weighted samples, compute according
-	    to eq 4.6 
-	    '''
-	    L = len(weighted_samples)
-	    log_weights = [weighted_samples[i][1] for i in range(0,L)]
-	    weights = np.exp(np.array(log_weights))
-	    print(weights)
-	    r = [ weighted_samples[i][0] for i in range(0,L)]
-	    denom = sum(weights)
-	    print("denominator is", denom)
-	    numerator = sum( [r[i] * weights[i] for i in range(0,L) ])
-
-	
-	    return numerator/denom
+	\subsection{Code}
+	For Importance Sampling I used the evaluation-based implementation based off of Jason's HW2 code.
 	
 	
-	def compute_variance(weighted_samples, mu):
-	
-	    L = len(weighted_samples)
-	    log_weights = [weighted_samples[i][1] for i in range(0,L)]
-	    weights = np.exp(np.array(log_weights))
-	    r = [ weighted_samples[i][0] for i in range(0,L)]
-	    denom = sum(weights)
-	    numerator = sum( [ (torch.square(r[i]) - torch.square(mu)) * weights[i] for i in range(0,L) ])
-	    return numerator/denom
-	
-	# likelihood weighting
-	# return r^l ang sigma^l from calling eval(e, sigma, [])
-	
-	
+	\begin{lstlisting}[language=Python ]
 	def evaluate_program(ast):
 	    """Evaluate a program as desugared by daphne, generate a sample from the prior
 	    Args:
@@ -336,9 +309,11 @@
 	
 	
 	    return eval(ast[-1],{'logW':0}, {})
+	\end{lstlisting}
 	
+	I also defined some extra functions: likelihood-weighting, compute-expectation, and compute-variance.
 	
-	#def likelihood_weighting(L,e):
+	\begin{lstlisting}[language=Python]
 	def likelihood_weighting(L,ast):
 	    weighted_samples = []
 	
@@ -349,7 +324,40 @@
 	        weighted_samples.append((r,logW))
 	        
 	    return weighted_samples
-	\end{lstlisting}	
+	\end{lstlisting}
+	
+	\begin{lstlisting}[language=Python]
+	def compute_expectation(weighted_samples):
+	    '''
+	    using a stream of weighted samples, compute according
+	    to eq 4.6 
+	    '''
+	    L = len(weighted_samples)
+	    log_weights = [weighted_samples[i][1] for i in range(0,L)]
+	    weights = np.exp(np.array(log_weights))
+	    print(weights)
+	    r = [ weighted_samples[i][0] for i in range(0,L)]
+	    denom = sum(weights)
+	    print("denominator is", denom)
+	    numerator = sum( [r[i] * weights[i] for i in range(0,L) ])
+	    #numerator = sum( [weighted_samples[i][0] * weighted_samples[i][1] for i in range(0,L) ])
+	
+	    return numerator/denom
+	\end{lstlisting}
+		
+	\begin{lstlisting}[language=Python]
+	def compute_variance(weighted_samples, mu):
+	
+	    L = len(weighted_samples)
+	    log_weights = [weighted_samples[i][1] for i in range(0,L)]
+	    weights = np.exp(np.array(log_weights))
+	    r = [ weighted_samples[i][0] for i in range(0,L)]
+	    denom = sum(weights)
+	    numerator = sum( [ (torch.square(r[i]) - torch.square(mu)) * weights[i] for i in range(0,L) ])
+	    return numerator/denom
+	\end{lstlisting}
+	
+	\subsection{results}
 	
 	The values returned are:
 	
@@ -377,15 +385,90 @@
 	variance is tensor(0.2183) 
 	
 	
+	
+	
+	
 	\section{MH within Gibbs}
 	
+	\subsection{code}
+	For MH withing Gibbs I used a graph-based implementation based off of Jason's HW2 code.
+	
+	\begin{lstlisting}[language=Python]
+def deterministic_eval(exp):
+    "Evaluation function for the deterministic target language of the graph based representation."
+    if type(exp) is list:
+        op = exp[0]
+        args = exp[1:]
+        return env[op](*map(deterministic_eval, args))
+    elif type(exp) in [int, float]:
+        # We use torch for all numerical objects in our evaluator
+        return torch.Tensor([float(exp)]).squeeze()
+    elif type(exp) is torch.Tensor:
+        return exp
+    elif type(exp) is bool:
+        return torch.tensor(exp)
+    else:
+        print("expression is:", exp)
+        print(type(exp))
+        raise Exception("Expression type unknown.", exp)
+
+def topological_sort(nodes, edges):
+    result = []
+    visited = {}
+    def helper(node):
+        if node not in visited:
+            visited[node] = True
+            if node in edges:
+                for child in edges[node]:
+                    helper(child)
+            result.append(node)
+    for node in nodes:
+        helper(node)
+    return result[::-1]
+
+def plugin_parent_values(expr, trace):
+    if type(expr) == str and expr in trace:
+        return trace[expr]
+    elif type(expr) == list:
+        return [plugin_parent_values(child_expr, trace) for child_expr in expr]
+    else:
+        return expr
+
+def sample_from_joint(graph):
+    "This function does ancestral sampling starting from the prior."
+    # TODO insert your code here
+    """
+    1. Run topological sort on V using V and A, resulting in an array of v's
+    2. Iterate through sample sites of the sorted array, and save sampled results on trace dictionary using P and Y
+    - If keyword is sample*, first recursively replace sample site names with trace values in the expression from P. Then, run deterministic_eval.
+    - If keyword is observe*, put the observation value in the trace dictionary
+    3. Filter the trace dictionary for things sample sites you should return
+    """
+    procs, model, expr = graph[0], graph[1], graph[2]
+    nodes, edges, links, obs = model['V'], model['A'], model['P'], model['Y']
+    sorted_nodes = topological_sort(nodes, edges)
+
+    sigma = {}
+    trace = {}
+    for node in sorted_nodes:
+        keyword = links[node][0]
+        if keyword == "sample*":
+            link_expr = links[node][1]
+            link_expr = plugin_parent_values(link_expr, trace)
+            dist_obj  = deterministic_eval(link_expr)
+            trace[node] = dist_obj.sample()
+        elif keyword == "observe*":
+            trace[node] = obs[node]
+
+    expr = plugin_parent_values(expr, trace)
+    return deterministic_eval(expr), sigma, trace
+	\end{lstlisting}
 	
 	
-	
+	I added the function MH-Gibbs which also contains functions accept and Gibbs-step.
 	\begin{lstlisting}[language=Python]
 	def MH_Gibbs(graph, numsamples):
 	    model = graph[1]
-	    exp = graph[2]
 	    vertices = model['V']
 	    arcs = model['A']
 	    links = model['P'] # link functions aka P
@@ -419,21 +502,13 @@
 	
 	
 	        # evaluate 
-
 	        d = deterministic_eval(p) # d = EVAL(p)
-
 	        dnew = deterministic_eval(pnew) #d' = EVAL(p')
-
-	        ### compute acceptance ratio ###
-			
-
 	
+	        ### compute acceptance ratio ###
 	
 	        # initialize log alpha
 	        logAlpha = dnew.log_prob(cXnew[x]) - d.log_prob(cX[x])
-
-	
-	
 	
 	        ### V_x = {x} \cup {v:x \in PA(v)} ###
 	        startindex = V_sorted.index(x)
@@ -441,11 +516,12 @@
 	
 	        # compute alpha
 	        for v in Vx:
-	            Pv = links[v] #P[v]
+	            Pv = links[v] # getting a bug here
 	            v_exp = plugin_parent_values(Pv,cX) #same as we did for p and pnew
 	            v_exp_new = plugin_parent_values(Pv,cXnew)
-	            dv_new = deterministic_eval(v_exp_new)
-	            dv = deterministic_eval(v_exp)
+	            dv_new = deterministic_eval(v_exp_new[1])
+	            dv = deterministic_eval(v_exp[1])
+	
 	            
 	            ## change below
 	            logAlpha = logAlpha + dv_new.log_prob(cXnew[v])
@@ -468,7 +544,7 @@
 	            cX[u] = dist_u
 	
 	            #compute acceptance ratio
-	            alpha = accept(u,cX, cXnew,Q)
+	            alpha = accept(u,cX,cXnew,Q)
 	            val = Uniform(0,1).sample()
 	
 	            if val < alpha:
@@ -484,23 +560,67 @@
 	        cX = Gibbs_step(cX_0,Q)
 	        cX_list.append(cX)
 	    
-	    samples = [ deterministic_eval(plugin_parent_values(graph[2],X)) for X in cX_list ]
+	    samples = list(map(lambda cX: deterministic_eval(plugin_parent_values(graph[2], cX)), cX_list))
+	    #samples = [ deterministic_eval(plugin_parent_values(graph[2],X)) for X in cX_list ]
 	
 	    return samples
-	\end{lstlisting}	
-
-
-	I have a bug in the line Pv = links[v] inside of the compute alpha function. For this reason I didn't have any output, but I think the logic of the code is correct.
-	
-	
-	
-	
-	
-
+	\end{lstlisting}
 		
+	\newpage
+	
+	
+	\subsection{Results}
+	
+	Here are the results from running MH Gibbs for programs 1 through 4:
+	\begin{figure}[h]
+	\includegraphics[scale=0.7]{MH_Gibbs_results}
+	\end{figure}
+	
+	\newpage
+	
+	\subsubsection{Program 1}
+	
+	\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{p1traceplot.png}
+	\includegraphics[scale=0.4]{p1histogram.png}
+	\caption{trace plot (left) and histogram (right)}
+	\end{figure}
+
+
+	\subsubsection{Program 2}
+	
+	\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{p2traceplot_bias.png}
+	\includegraphics[scale=0.4]{p2histogram_bias.png}
+	\caption{Program 2 (bias): trace plot (left) and histogram (right)}
+	\end{figure}
+	
+	\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{p2traceplot_slope.png}
+	\includegraphics[scale=0.4]{p2histogram_slope.png}
+	\caption{Program 2 (slope): trace plot (left) and histogram (right)}
+	\end{figure}
 		
 	
+		
+	\subsubsection{Program 3}
 	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.4]{p3histogram.png}
+		\caption{Program 3 histogram }
+	\end{figure}
+	
+		\subsubsection{Program 4}
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[scale=0.4]{p4histogram.png}
+			\caption{Program 4 histogram }
+		\end{figure}
 	
 %	\bibliography{research.bib}
 %	\bibliographystyle{plain}
