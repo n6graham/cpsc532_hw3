@@ -203,6 +203,7 @@ def MH_Gibbs(graph, numsamples):
             logAlpha = logAlpha - dv.log_prob(cX[v])
         return torch.exp(logAlpha)
 
+
     
     def Gibbs_step(cX,Q):
         # here we need a list of the latent (unobserved) variables

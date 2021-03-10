@@ -145,6 +145,7 @@ def get_stream(ast):
     
 
 
+
 def run_deterministic_tests():
     
     for i in range(1,14):
@@ -210,10 +211,18 @@ if __name__ == '__main__':
         #L =1
         #samples = [ evaluate_program(ast) for i in range(0,L)]
         samples = likelihood_weighting(L,ast)
+        
         expectation = compute_expectation(samples)
         print("\n \n expectation is:", expectation)
         variance = compute_variance(samples, expectation)
         print("variance is", variance,"\n \n")
+
+
+        values = [samples[i][0] for i in range(len(samples))]
+
+        figH,axH = plt.subplots()
+        axH.hist(values)
+        figH.savefig('../HW3/IS_histogram_p{}'.format(i),dpi = 150)
 
     '''
 

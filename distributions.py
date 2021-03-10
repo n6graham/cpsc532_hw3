@@ -1,6 +1,7 @@
 import torch
 import torch.distributions as dist
 
+
 class Normal(dist.Normal):
     
     def __init__(self, loc, scale):
