@@ -9,4 +9,4 @@
           (let [z (sample z-prior)
                 _ (observe (get likes z) y)]
             z))]
-  (== (first z) (second z)))
+  (== (first z) (second z))) 

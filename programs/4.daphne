@@ -18,4 +18,4 @@
                             (flip 0.9) 0)))]
   (observe sprinkler-dist sprinkler)
   (observe wet-grass-dist wet-grass)
-  is-raining)
+  is-raining) 

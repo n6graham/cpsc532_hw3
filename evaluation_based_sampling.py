@@ -204,6 +204,52 @@ if __name__ == '__main__':
 
     #i =1
 
+    L= 10000
+    '''
+    ast1 = daphne(['desugar', '-i', '../HW3/programs/1.daphne'])
+    samples = likelihood_weighting(L,ast1)
+
+    values = [samples[i][0] for i in range(len(samples))]
+
+    figH,axH = plt.subplots()
+    axH.hist(values)
+    figH.savefig('../HW3/IS_histogram_p1',dpi = 150)
+    '''
+
+    ast1 = daphne(['desugar', '-i', '../HW3/programs/3.daphne'])
+    samples = likelihood_weighting(L,ast1)
+
+    values = [samples[i][0] for i in range(len(samples))]
+
+    figH,axH = plt.subplots()
+    axH.hist(values)
+    figH.savefig('../HW3/IS_histogram_p3',dpi = 150)
+
+    
+    ast1 = daphne(['desugar', '-i', '../HW3/programs/4.daphne'])
+    samples = likelihood_weighting(L,ast1)
+
+    values = [samples[i][0] for i in range(len(samples))]
+
+    figH,axH = plt.subplots()
+    axH.hist(values)
+    figH.savefig('../HW3/IS_histogram_p3',dpi = 150)
+
+
+
+    #ast2 = daphne(['desugar', '-i', '../HW3/programs/2.daphne'])
+
+    #ast3 = daphne(['desugar', '-i', '../HW3/programs/3.daphne'])
+
+    #ast4 = daphne(['desugar', '-i', '../HW3/programs/4.daphne'])
+
+    
+
+
+    '''
+
+
+
     for i in range(2,3):
         ast = daphne(['desugar', '-i', '../HW3/programs/{}.daphne'.format(i)])
         #L = 100000
@@ -223,6 +269,9 @@ if __name__ == '__main__':
         figH,axH = plt.subplots()
         axH.hist(values)
         figH.savefig('../HW3/IS_histogram_p{}'.format(i),dpi = 150)
+    '''
+
+
 
     '''
 

@@ -3,4 +3,4 @@
       lik   (normal mu sigma)]
   (observe lik 8)
   (observe lik 9)
-  mu)
+  mu) 
